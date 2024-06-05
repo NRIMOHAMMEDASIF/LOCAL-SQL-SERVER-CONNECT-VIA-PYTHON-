@@ -1,4 +1,4 @@
-# LOCAL-SQL-SERVER-CONNECT-VIA-PYTHON-
+# PYSARK INSTALLATION AND AFTER INSTALLATION LOCAL-SQL-SERVER-CONNECT-VIA-PYTHON-
 LOCAL SQL SERVER CONNECT VIA PYTHON 
 
 
@@ -31,3 +31,42 @@ Python 3.11.9- https://www.python.org/downloads/
 JAVA 17  - https://www.oracle.com/in/java/technologies/downloads/#java17
 Spark  3.4.3 - https://spark.apache.org/downloads.html
 Hadoop winutils(hadoop-3.3.0) - https://github.com/NRIMOHAMMEDASIF/winutils-master
+
+
+------------------------------------
+# LOCAL-SQL-SERVER-CONNECT-VIA-PYTHON-
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
+#Connection details
+CONNECTOR_TYPE = "jdbc"
+SQL_USERNAME = "XXXXXUSER"
+SQL_PASSWORD = "XXXX"
+SQL_DBNAME = "DB_NAME"
+SQL_SERVERNAME = "SERVER_NAME"
+
+#table name 
+cc_table = "dbo.Asif_Practice_credit_card"
+cust_table = "dbo.Asif_Practice_customer"
+
+hr = "dbo.Payroll_Comparison_13_months"
+
+if __name__ == "__main__":
+
+    spark = SparkSession.builder \
+        .appName("spark sql demo") \
+        .getOrCreate()
+     
+    url = f"jdbc:sqlserver://{SQL_SERVERNAME};databaseName={SQL_DBNAME};"
+
+    df_sales_header = spark.read \
+        .format("jdbc") \
+        .option("url", url) \
+        .option("dbtable", hr) \
+        .option("user", SQL_USERNAME) \
+        .option("password", SQL_PASSWORD) \
+        .load()
+    
+    df_sales_header.show(10,False)
+
+    df_sales_header.printSchema()
